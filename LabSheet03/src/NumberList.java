@@ -23,9 +23,10 @@ public class NumberList {
 		System.out.println(numlist.traversal());
 		
 		System.out.println("Lenght"+numlist.lenght());
+		System.out.println("Node 2 "+numlist.get(2));
 		
-		
-		
+		numlist.set(1, 100);
+		System.out.println(numlist.traversal());
 		
 		numlist.clear();
 		System.out.println(numlist.traversal());
