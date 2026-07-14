@@ -22,8 +22,10 @@ public class NumberList {
 		numlist.removeLastElement();
 		System.out.println(numlist.traversal());
 		
-		numlist.lenght();
-		System.out.println(numlist.traversal());
+		System.out.println("Lenght"+numlist.lenght());
+		
+		
+		
 		
 		numlist.clear();
 		System.out.println(numlist.traversal());
