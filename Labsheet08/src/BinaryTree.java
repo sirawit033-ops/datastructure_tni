@@ -1,7 +1,11 @@
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class BinaryTree {
 
 	private Node root;
+	private Node parent;
+	private Node deleteNode;
 
 	public BinaryTree() {
 		root = null;
@@ -69,7 +73,7 @@ public class BinaryTree {
 	}
 
 	public void createTree6() {
-		int[] num = { 40,20,70,30,55,85,25,35,80,32 };
+		int[] num = { 40, 20, 70, 30, 55, 85, 25, 35, 80, 32 };
 		for (int i = 0; i < num.length; i++) {
 			insert(num[i]);
 		}
@@ -98,5 +102,104 @@ public class BinaryTree {
 			}
 		}
 	}
+	public Node search(Node current, int data) {
+	    if (current == null) return null;
+	    if (current.data == data) return current;
+	    
+	    Node foundNode = search(current.left, data);
+	    if (foundNode != null) return foundNode;
+	    
+	    return search(current.right, data);
+	}
 
+	public void searchDeleteNode(int data) {
+		Queue<Node> queue = new ArrayDeque<Node>();
+		
+		queue.add(root);
+		
+		while (!queue.isEmpty()) {
+			int levelSize = queue.size();
+			Node current_node = queue.poll();
+			parent = current_node;
+			// In case of the delete node is root_node
+			if (parent.data == data) {
+				deleteNode = parent;
+				break;
+			}
+			// In case of the delete node is NOT root_node
+			for (int i=0; i<levelSize; i++) {
+				if (current_node.left != null) {
+					if (current_node.left.data == data) {
+						deleteNode = current_node.left;
+						queue.clear();
+						break;
+					}
+					queue.add(current_node.left);
+				}
+				if (current_node.right != null) {
+					if (current_node.right.data == data) {
+						deleteNode = current_node.right;
+						queue.clear();
+						break;
+					}
+					queue.add(current_node.right);
+				}
+			} //end for
+			
+		} // end while
+		
+	}
+	
+	public void delete(int target) {
+		searchDeleteNode(target);
+		if (root == null) {
+			System.out.println("Empty Tree");
+		} else if (deleteNode == null) {
+			System.out.println("Cannot found the Sarch node");
+		} else {
+			// case 1 Delete a Leaf Node
+			if (deleteNode.left == null && deleteNode.right == null) {
+				if (parent.left != null && parent.left.data == target) {
+					parent.left = null;
+				}
+				if (parent.right != null && parent.right.data == target) {
+					parent.right = null;
+				}
+			}
+			// case 2 Delete a node with 2 child
+			else if (deleteNode.left != null && deleteNode.right != null) {
+				Node successorParent = deleteNode;
+				Node successor = deleteNode.right;
+
+				while (successor.left != null) {
+					successorParent = successor;
+					successor = successor.left;
+				}
+				deleteNode.data = successor.data;
+
+				if (successorParent.left == successor) {
+					successorParent.left = successor.right;
+				} else {
+					successorParent.right = successor.right;
+				}
+
+			}
+			// case 2 Delete a node with 1 child
+			else {
+				if (deleteNode.left != null) {
+					if (parent.left.data == deleteNode.data) {
+						parent.left = deleteNode.left;
+					} else {
+						parent.right = deleteNode.left;
+					}
+				} else {
+					if (parent.left.data == deleteNode.data) {
+						parent.left = deleteNode.right;
+					} else {
+						parent.right = deleteNode.right;
+					}
+				}
+			}
+		}
+	}
 }
